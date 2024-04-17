@@ -14,11 +14,18 @@ dependencies:
   cupertino_icons: ^1.0.8
   pedometer: ^4.0.1
   permission_handler: 11.3.1
+  shared_preferences: 2.2.3
+  freezed_annotation: 2.4.1
+  json_annotation: 4.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.2
+  freezed: 2.5.2
+  json_serializable: 6.7.1
+  build_runner: 2.4.9
+
 
 flutter:
 
