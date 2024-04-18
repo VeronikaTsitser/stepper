@@ -17,7 +17,6 @@ class StepperHomeScreen extends StatefulWidget {
 
 class _StepperHomeScreenState extends State<StepperHomeScreen> {
   final int _stepGoal = 1000; // Цель по шагам
-  final bool _isPaused = false; // Состояние паузы
   final double _distance = 0.0; // Пройденное расстояние в км
   // ignore: prefer_final_fields
   Duration _walkingTime = Duration.zero; // Общее время ходьбы
@@ -35,6 +34,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
         context.read<StepperBloc>().add(StepperEvent.toggleTracking(steps: steps));
       }
       _isInitialized = true;
+      setState(() {});
     }
   }
 
@@ -103,6 +103,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                   }
 
                   int steps = getSteps(state.allSteps, snapshot.data?.steps ?? 0);
+
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -121,8 +122,15 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () => context.read<StepperBloc>().add(StepperEvent.toggleTracking(steps: steps)),
-                        child: Text(_isPaused ? 'Возобновить' : 'Пауза'),
+                        onPressed: () {
+                          context
+                              .read<StepperBloc>()
+                              .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
+                        },
+                        child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
+                                context.read<StepperBloc>().state.allSteps.last.isPaused
+                            ? 'Возобновить'
+                            : 'Пауза'),
                       ),
                       const SizedBox(height: 20),
                       Text('Расстояние: ${_distance.toStringAsFixed(2)} км', style: const TextStyle(fontSize: 20)),
@@ -140,25 +148,22 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   String formatDuration(Duration d) {
     return d.toString().split('.').first;
   }
-}
 
-int getSteps(List<StepModel> allSteps, int step) {
-  if (allSteps.isEmpty) {
-    return 13;
-  }
-  List<StepModel> sortedSteps = [...allSteps];
-  sortedSteps.sort((a, b) => a.date.compareTo(b.date));
-  int steps = 0;
-  if (sortedSteps.length == 1) {
-    steps += step - sortedSteps.first.step;
-  }
-  for (int i = 0; i < sortedSteps.length - 1; i++) {
-    if (sortedSteps[i].isPaused == false) {
-      steps += sortedSteps[i + 1].step - sortedSteps[i].step;
+  int getSteps(List<StepModel> allSteps, int step) {
+    int steps = 0;
+    if (_isInitialized) {
+      List<StepModel> sortedSteps = [...allSteps];
+      sortedSteps.sort((a, b) => a.date.compareTo(b.date));
+
+      for (int i = 0; i < sortedSteps.length - 1; i++) {
+        if (sortedSteps[i].isPaused == false) {
+          steps += sortedSteps[i + 1].step - sortedSteps[i].step;
+        }
+      }
+      if (sortedSteps.last.isPaused == false) {
+        steps += step - sortedSteps.last.step;
+      }
     }
+    return steps;
   }
-  if (sortedSteps.last.isPaused == true) {
-    steps += step - sortedSteps.last.step;
-  }
-  return steps;
 }
