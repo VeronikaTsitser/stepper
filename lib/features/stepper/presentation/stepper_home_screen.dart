@@ -31,7 +31,9 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
     } else {
       final state = context.read<StepperBloc>().state;
       if (state.allSteps.isEmpty) {
-        context.read<StepperBloc>().add(StepperEvent.toggleTracking(steps: steps));
+        final completer = Completer();
+        context.read<StepperBloc>().add(StepperEvent.toggleTracking(steps: steps, completer: completer));
+        await completer.future;
       }
       _isInitialized = true;
       setState(() {});
@@ -121,17 +123,17 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<StepperBloc>()
-                              .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
-                        },
-                        child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
-                                context.read<StepperBloc>().state.allSteps.last.isPaused
-                            ? 'Возобновить'
-                            : 'Пауза'),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     context
+                      //         .read<StepperBloc>()
+                      //         .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
+                      //   },
+                      //   child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
+                      //           context.read<StepperBloc>().state.allSteps.last.isPaused
+                      //       ? 'Возобновить'
+                      //       : 'Пауза'),
+                      // ),
                       const SizedBox(height: 20),
                       Text('Расстояние: ${_distance.toStringAsFixed(2)} км', style: const TextStyle(fontSize: 20)),
                       const SizedBox(height: 20),

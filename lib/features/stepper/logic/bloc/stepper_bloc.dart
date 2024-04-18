@@ -23,5 +23,6 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
 
     await repository.setAllSteps(newAllSteps);
     emit(StepperState(allSteps: newAllSteps));
+    event.completer?.complete();
   }
 }
