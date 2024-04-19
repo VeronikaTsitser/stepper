@@ -76,7 +76,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                             : 'Пауза'),
                       ),
                       const SizedBox(height: 20),
-                      const DistanceWidget(),
+                      DistanceWidget(steps: steps),
                       const SizedBox(height: 20),
                       const WalkingTimer(),
                     ],
@@ -159,16 +159,23 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
 }
 
 class DistanceWidget extends StatefulWidget {
-  const DistanceWidget({super.key});
+  const DistanceWidget({super.key, required this.steps});
+  final int steps;
 
   @override
   State<DistanceWidget> createState() => _DistanceWidgetState();
 }
 
 class _DistanceWidgetState extends State<DistanceWidget> {
-  final double _distance = 0.0;
+  double _distance = 0.0;
   @override
   Widget build(BuildContext context) {
-    return Text('Расстояние: ${_distance.toStringAsFixed(2)} км', style: const TextStyle(fontSize: 20));
+    return Text('Расстояние: ${calculateDistance(widget.steps)} км', style: const TextStyle(fontSize: 20));
+  }
+
+  String calculateDistance(int steps) {
+    double stepLength = 0.762; // Средний шаг в метрах
+    _distance = (steps * stepLength) / 1000;
+    return _distance.toStringAsFixed(2);
   }
 }
