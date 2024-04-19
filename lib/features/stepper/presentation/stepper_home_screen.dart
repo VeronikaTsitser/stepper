@@ -38,7 +38,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
         //   final prefs = await SharedPreferences.getInstance();
         //   prefs.clear();
         // },
-        child: const Icon(Icons.refresh),
+        child: const Icon(Icons.settings),
       ),
       appBar: AppBar(
         title: const Text('My Stepper'),
