@@ -9,7 +9,11 @@ import 'package:stepper/features/stepper/domain/models/step_model.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
 import 'package:stepper/features/stepper/logic/user_characteristics_notifier.dart';
 import 'package:stepper/features/stepper/presentation/components/pop_ups.dart';
+import 'package:stepper/features/stepper/presentation/widgets/current_steps_value_widget.dart';
 import 'package:stepper/features/stepper/presentation/widgets/distance_widget.dart';
+import 'package:stepper/features/stepper/presentation/widgets/start_pause_button.dart';
+import 'package:stepper/features/stepper/presentation/widgets/step_goal_widget.dart';
+import 'package:stepper/features/stepper/presentation/widgets/steps_progress_indicator.dart';
 import 'package:stepper/features/stepper/presentation/widgets/walking_timer.dart';
 
 class StepperHomeScreen extends StatefulWidget {
@@ -54,31 +58,13 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('$steps', style: const TextStyle(fontSize: 30)),
+                      CurrentStepsValueWidget(steps: steps),
                       const SizedBox(height: 20),
-                      Text('Цель: $_stepGoal шагов', style: const TextStyle(fontSize: 20)),
+                      StepGoalWidget(stepGoal: _stepGoal),
                       const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: LinearProgressIndicator(
-                          value: steps / _stepGoal,
-                          backgroundColor: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-                        ),
-                      ),
+                      StepsProgressIndicator(steps: steps, stepGoal: _stepGoal),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<StepperBloc>()
-                              .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
-                        },
-                        child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
-                                context.read<StepperBloc>().state.allSteps.last.isPaused
-                            ? 'Старт'
-                            : 'Пауза'),
-                      ),
+                      StartPauseButton(snapshot: snapshot),
                       const SizedBox(height: 20),
                       DistanceWidget(steps: steps),
                       const SizedBox(height: 20),
