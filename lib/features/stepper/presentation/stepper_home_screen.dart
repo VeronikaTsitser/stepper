@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepper/features/stepper/domain/models/step_model.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
+import 'package:stepper/features/stepper/presentation/widgets/distance_widget.dart';
 import 'package:stepper/features/stepper/presentation/widgets/walking_timer.dart';
 
 class StepperHomeScreen extends StatefulWidget {
@@ -21,12 +22,15 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   final int _stepGoal = 1000; // Цель по шагам
   StreamSubscription<StepCount>? _subscription;
   bool isInitialized = false;
+  int userHeight = 170;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+        onPressed:
+            // () => showHeightDialog(context).then((value) => setState(() => userHeight = value)),
+            () async {
           final prefs = await SharedPreferences.getInstance();
           prefs.clear();
         },
@@ -72,11 +76,11 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                         },
                         child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
                                 context.read<StepperBloc>().state.allSteps.last.isPaused
-                            ? 'Возобновить'
+                            ? 'Старт'
                             : 'Пауза'),
                       ),
                       const SizedBox(height: 20),
-                      DistanceWidget(steps: steps),
+                      DistanceWidget(steps: steps, userHeight: userHeight),
                       const SizedBox(height: 20),
                       const WalkingTimer(),
                     ],
@@ -155,27 +159,5 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   void dispose() {
     _subscription?.cancel();
     super.dispose();
-  }
-}
-
-class DistanceWidget extends StatefulWidget {
-  const DistanceWidget({super.key, required this.steps});
-  final int steps;
-
-  @override
-  State<DistanceWidget> createState() => _DistanceWidgetState();
-}
-
-class _DistanceWidgetState extends State<DistanceWidget> {
-  double _distance = 0.0;
-  @override
-  Widget build(BuildContext context) {
-    return Text('Расстояние: ${calculateDistance(widget.steps)} км', style: const TextStyle(fontSize: 20));
-  }
-
-  String calculateDistance(int steps) {
-    double stepLength = 0.762; // Средний шаг в метрах
-    _distance = (steps * stepLength) / 1000;
-    return _distance.toStringAsFixed(2);
   }
 }
