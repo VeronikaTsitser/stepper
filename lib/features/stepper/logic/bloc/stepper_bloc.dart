@@ -18,7 +18,7 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
   Future<void> onToggleTrackingEvent(PauseResumeTracking event, Emitter<StepperState> emit) async {
     final allSteps = await repository.getAllSteps();
     final newStep = StepModel(
-        step: event.steps, date: DateTime.now(), isPaused: allSteps.isNotEmpty ? !allSteps.last.isPaused : false);
+        step: event.steps, date: DateTime.now(), isPaused: allSteps.isNotEmpty ? !allSteps.last.isPaused : true);
     final newAllSteps = [...allSteps, newStep];
     await repository.setAllSteps(newAllSteps);
     int walkingTime = 0;
