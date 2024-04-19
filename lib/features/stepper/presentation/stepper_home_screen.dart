@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepper/features/stepper/domain/models/step_model.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
+import 'package:stepper/features/stepper/logic/user_characteristics_notifier.dart';
+import 'package:stepper/features/stepper/presentation/components/pop_ups.dart';
 import 'package:stepper/features/stepper/presentation/widgets/distance_widget.dart';
 import 'package:stepper/features/stepper/presentation/widgets/walking_timer.dart';
 
@@ -22,18 +23,17 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   final int _stepGoal = 1000; // Цель по шагам
   StreamSubscription<StepCount>? _subscription;
   bool isInitialized = false;
-  int userHeight = 170;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed:
-            // () => showHeightDialog(context).then((value) => setState(() => userHeight = value)),
-            () async {
-          final prefs = await SharedPreferences.getInstance();
-          prefs.clear();
-        },
+        onPressed: () => showHeightDialog(context)
+            .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
+        //     () async {
+        //   final prefs = await SharedPreferences.getInstance();
+        //   prefs.clear();
+        // },
         child: const Icon(Icons.refresh),
       ),
       appBar: AppBar(
@@ -80,7 +80,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                             : 'Пауза'),
                       ),
                       const SizedBox(height: 20),
-                      DistanceWidget(steps: steps, userHeight: userHeight),
+                      DistanceWidget(steps: steps),
                       const SizedBox(height: 20),
                       const WalkingTimer(),
                     ],

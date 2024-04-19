@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:stepper/features/stepper/data/stepper_repository_impl.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
+import 'package:stepper/features/stepper/logic/user_characteristics_notifier.dart';
 import 'package:stepper/features/stepper/presentation/stepper_home_screen.dart';
 
 void main() {
@@ -22,7 +24,10 @@ class StepperApp extends StatelessWidget {
         create: (context) => StepperRepositoryImpl(),
         child: BlocProvider(
           create: (context) => StepperBloc(context.read<StepperRepositoryImpl>()),
-          child: const StepperHomeScreen(),
+          child: ChangeNotifierProvider(
+            create: (context) => HumanCharacteristicsNotifier(),
+            child: const StepperHomeScreen(),
+          ),
         ),
       ),
     );

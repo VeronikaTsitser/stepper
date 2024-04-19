@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stepper/features/stepper/logic/user_characteristics_notifier.dart';
 
 class DistanceWidget extends StatefulWidget {
-  const DistanceWidget({super.key, required this.steps, required this.userHeight});
+  const DistanceWidget({super.key, required this.steps});
   final int steps;
-  final int userHeight;
 
   @override
   State<DistanceWidget> createState() => _DistanceWidgetState();
@@ -16,19 +17,17 @@ class _DistanceWidgetState extends State<DistanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Расстояние: ${calculateDistance(widget.steps, calculateStepLength(widget.userHeight))} км',
-        style: const TextStyle(fontSize: 20));
+    return Text('Расстояние: ${calculateDistance(widget.steps)} км', style: const TextStyle(fontSize: 20));
   }
 
-  double calculateStepLength(int userHeight) {
-    final stepLength = userHeight * 0.415 / 100;
-    log('Step length: $stepLength');
-    return stepLength;
-  }
+  String calculateDistance(int steps) {
+    if (context.watch<HumanCharacteristicsNotifier>().isInitialized) {
+      final stepLength = context.watch<HumanCharacteristicsNotifier>().calculateStepLength();
 
-  String calculateDistance(int steps, double stepLength) {
-    final distance = (steps * stepLength) / 1000;
-    log('Distance: $distance');
-    return distance.toStringAsFixed(2);
+      final distance = (steps * stepLength) / 1000;
+      log('Distance: $distance');
+      return distance.toStringAsFixed(2);
+    }
+    return '';
   }
 }
