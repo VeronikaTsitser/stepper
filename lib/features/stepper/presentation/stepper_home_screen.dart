@@ -18,15 +18,13 @@ class StepperHomeScreen extends StatefulWidget {
 class _StepperHomeScreenState extends State<StepperHomeScreen> {
   final int _stepGoal = 1000; // Цель по шагам
   final double _distance = 0.0; // Пройденное расстояние в км
-  // ignore: prefer_final_fields
-  Duration _walkingTime = Duration.zero; // Общее время ходьбы
   StreamSubscription<StepCount>? _subscription;
 
-  bool _isInitialized = false;
+  bool isInitialized = false;
 
   void onStepCount(StepCount event) async {
     int steps = event.steps;
-    if (_isInitialized == true) {
+    if (isInitialized == true) {
       return;
     } else {
       final state = context.read<StepperBloc>().state;
@@ -35,7 +33,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
         context.read<StepperBloc>().add(StepperEvent.toggleTracking(steps: steps, completer: completer));
         await completer.future;
       }
-      _isInitialized = true;
+      isInitialized = true;
       setState(() {});
     }
   }
@@ -52,13 +50,13 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
     final status = await Permission.activityRecognition.request();
     if (status == PermissionStatus.granted) {
       print("Permission granted");
-      startListening();
+      startListeningSteps();
     } else {
       print("Permission denied");
     }
   }
 
-  void startListening() {
+  void startListeningSteps() {
     _subscription ??= Pedometer.stepCountStream.listen(
       onStepCount,
       onError: onStepCountError,
@@ -78,6 +76,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   @override
   void dispose() {
     _subscription?.cancel();
+
     super.dispose();
   }
 
@@ -123,21 +122,21 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     context
-                      //         .read<StepperBloc>()
-                      //         .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
-                      //   },
-                      //   child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
-                      //           context.read<StepperBloc>().state.allSteps.last.isPaused
-                      //       ? 'Возобновить'
-                      //       : 'Пауза'),
-                      // ),
+                      ElevatedButton(
+                        onPressed: () {
+                          context
+                              .read<StepperBloc>()
+                              .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
+                        },
+                        child: Text(context.read<StepperBloc>().state.allSteps.isNotEmpty &&
+                                context.read<StepperBloc>().state.allSteps.last.isPaused
+                            ? 'Возобновить'
+                            : 'Пауза'),
+                      ),
                       const SizedBox(height: 20),
                       Text('Расстояние: ${_distance.toStringAsFixed(2)} км', style: const TextStyle(fontSize: 20)),
                       const SizedBox(height: 20),
-                      Text('Время ходьбы: ${formatDuration(_walkingTime)}', style: const TextStyle(fontSize: 20)),
+                      const _WalkingTimer(),
                     ],
                   );
                 });
@@ -147,13 +146,10 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
     );
   }
 
-  String formatDuration(Duration d) {
-    return d.toString().split('.').first;
-  }
-
   int getSteps(List<StepModel> allSteps, int step) {
     int steps = 0;
-    if (_isInitialized) {
+
+    if (isInitialized) {
       List<StepModel> sortedSteps = [...allSteps];
       sortedSteps.sort((a, b) => a.date.compareTo(b.date));
 
@@ -167,5 +163,64 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
       }
     }
     return steps;
+  }
+}
+
+class _WalkingTimer extends StatefulWidget {
+  const _WalkingTimer();
+
+  @override
+  State<_WalkingTimer> createState() => _WalkingTimerState();
+}
+
+class _WalkingTimerState extends State<_WalkingTimer> {
+  Timer? _timer;
+
+  StepperState get stepperState => context.read<StepperBloc>().state;
+  int get _walkingTime => stepperState.walkingTime;
+  bool get _isPaused => stepperState.allSteps.isNotEmpty ? stepperState.allSteps.last.isPaused : false;
+  int _newWalkingTime = 0;
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, onTick);
+  }
+
+  void onTick(Timer timer) {
+    if (!_isPaused) {
+      setState(() {
+        DateTime currentTime = DateTime.now();
+        DateTime lastStepDate = stepperState.allSteps.last.date;
+        int secFromLastStepToNow = currentTime.difference(lastStepDate).inSeconds;
+        _newWalkingTime = _walkingTime + secFromLastStepToNow;
+      });
+    }
+  }
+
+  String formatTime(int totalSeconds) {
+    int hours = totalSeconds ~/ 3600;
+    int minutes = (totalSeconds % 3600) ~/ 60;
+    int seconds = totalSeconds % 60;
+
+    String formattedTime =
+        "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    return formattedTime;
+  }
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Время ходьбы: ${formatTime(_newWalkingTime)}', style: const TextStyle(fontSize: 20));
   }
 }

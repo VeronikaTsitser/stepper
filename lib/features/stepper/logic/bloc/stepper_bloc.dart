@@ -11,18 +11,23 @@ part 'stepper_state.dart';
 
 class StepperBloc extends Bloc<StepperEvent, StepperState> {
   final StepperRepository repository;
-  StepperBloc(this.repository) : super(const StepperState(allSteps: [])) {
-    on<PauseResumeTracking>(onToggleEvent);
+  StepperBloc(this.repository) : super(const StepperState(allSteps: [], walkingTime: 0)) {
+    on<PauseResumeTracking>(onToggleTrackingEvent);
   }
 
-  Future<void> onToggleEvent(PauseResumeTracking event, Emitter<StepperState> emit) async {
+  Future<void> onToggleTrackingEvent(PauseResumeTracking event, Emitter<StepperState> emit) async {
     final allSteps = await repository.getAllSteps();
     final newStep = StepModel(
         step: event.steps, date: DateTime.now(), isPaused: allSteps.isNotEmpty ? !allSteps.last.isPaused : false);
     final newAllSteps = [...allSteps, newStep];
-
     await repository.setAllSteps(newAllSteps);
-    emit(StepperState(allSteps: newAllSteps));
+    int walkingTime = 0;
+    for (int i = 0; i < newAllSteps.length - 1; i++) {
+      if (!newAllSteps[i].isPaused) {
+        walkingTime += newAllSteps[i + 1].date.difference(newAllSteps[i].date).inSeconds;
+      }
+    }
+    emit(StepperState(allSteps: newAllSteps, walkingTime: walkingTime));
     event.completer?.complete();
   }
 }

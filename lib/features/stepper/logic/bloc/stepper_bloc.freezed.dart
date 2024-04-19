@@ -244,6 +244,7 @@ abstract class PauseResumeTracking implements StepperEvent {
 /// @nodoc
 mixin _$StepperState {
   List<StepModel> get allSteps => throw _privateConstructorUsedError;
+  int get walkingTime => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $StepperStateCopyWith<StepperState> get copyWith =>
@@ -256,7 +257,7 @@ abstract class $StepperStateCopyWith<$Res> {
           StepperState value, $Res Function(StepperState) then) =
       _$StepperStateCopyWithImpl<$Res, StepperState>;
   @useResult
-  $Res call({List<StepModel> allSteps});
+  $Res call({List<StepModel> allSteps, int walkingTime});
 }
 
 /// @nodoc
@@ -273,12 +274,17 @@ class _$StepperStateCopyWithImpl<$Res, $Val extends StepperState>
   @override
   $Res call({
     Object? allSteps = null,
+    Object? walkingTime = null,
   }) {
     return _then(_value.copyWith(
       allSteps: null == allSteps
           ? _value.allSteps
           : allSteps // ignore: cast_nullable_to_non_nullable
               as List<StepModel>,
+      walkingTime: null == walkingTime
+          ? _value.walkingTime
+          : walkingTime // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -291,7 +297,7 @@ abstract class _$$StepperStateImplCopyWith<$Res>
       __$$StepperStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<StepModel> allSteps});
+  $Res call({List<StepModel> allSteps, int walkingTime});
 }
 
 /// @nodoc
@@ -306,12 +312,17 @@ class __$$StepperStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? allSteps = null,
+    Object? walkingTime = null,
   }) {
     return _then(_$StepperStateImpl(
       allSteps: null == allSteps
           ? _value._allSteps
           : allSteps // ignore: cast_nullable_to_non_nullable
               as List<StepModel>,
+      walkingTime: null == walkingTime
+          ? _value.walkingTime
+          : walkingTime // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -319,7 +330,8 @@ class __$$StepperStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$StepperStateImpl extends _StepperState {
-  const _$StepperStateImpl({required final List<StepModel> allSteps})
+  const _$StepperStateImpl(
+      {required final List<StepModel> allSteps, required this.walkingTime})
       : _allSteps = allSteps,
         super._();
 
@@ -332,8 +344,11 @@ class _$StepperStateImpl extends _StepperState {
   }
 
   @override
+  final int walkingTime;
+
+  @override
   String toString() {
-    return 'StepperState(allSteps: $allSteps)';
+    return 'StepperState(allSteps: $allSteps, walkingTime: $walkingTime)';
   }
 
   @override
@@ -341,12 +356,14 @@ class _$StepperStateImpl extends _StepperState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StepperStateImpl &&
-            const DeepCollectionEquality().equals(other._allSteps, _allSteps));
+            const DeepCollectionEquality().equals(other._allSteps, _allSteps) &&
+            (identical(other.walkingTime, walkingTime) ||
+                other.walkingTime == walkingTime));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_allSteps));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_allSteps), walkingTime);
 
   @JsonKey(ignore: true)
   @override
@@ -356,12 +373,15 @@ class _$StepperStateImpl extends _StepperState {
 }
 
 abstract class _StepperState extends StepperState {
-  const factory _StepperState({required final List<StepModel> allSteps}) =
-      _$StepperStateImpl;
+  const factory _StepperState(
+      {required final List<StepModel> allSteps,
+      required final int walkingTime}) = _$StepperStateImpl;
   const _StepperState._() : super._();
 
   @override
   List<StepModel> get allSteps;
+  @override
+  int get walkingTime;
   @override
   @JsonKey(ignore: true)
   _$$StepperStateImplCopyWith<_$StepperStateImpl> get copyWith =>
