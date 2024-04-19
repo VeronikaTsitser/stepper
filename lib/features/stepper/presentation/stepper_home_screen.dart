@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepper/features/stepper/domain/models/step_model.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
 import 'package:stepper/features/stepper/logic/user_characteristics_notifier.dart';
@@ -24,21 +25,29 @@ class StepperHomeScreen extends StatefulWidget {
 }
 
 class _StepperHomeScreenState extends State<StepperHomeScreen> {
-  final int _stepGoal = 1000; // Цель по шагам
   StreamSubscription<StepCount>? _subscription;
   bool isInitialized = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showHeightDialog(context)
-            .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
-        //     () async {
-        //   final prefs = await SharedPreferences.getInstance();
-        //   prefs.clear();
-        // },
-        child: const Icon(Icons.settings),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            onPressed: () => showHeightDialog(context)
+                .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
+            child: const Icon(Icons.settings),
+          ),
+          const SizedBox(width: 20),
+          FloatingActionButton(
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.clear();
+            },
+            child: const Icon(Icons.clear),
+          ),
+        ],
       ),
       appBar: AppBar(
         title: const Text('My Stepper'),
@@ -60,9 +69,9 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                     children: [
                       CurrentStepsValueWidget(steps: steps),
                       const SizedBox(height: 20),
-                      StepGoalWidget(stepGoal: _stepGoal),
+                      const StepGoalWidget(),
                       const SizedBox(height: 20),
-                      StepsProgressIndicator(steps: steps, stepGoal: _stepGoal),
+                      StepsProgressIndicator(steps: steps),
                       const SizedBox(height: 20),
                       StartPauseButton(snapshot: snapshot),
                       const SizedBox(height: 20),

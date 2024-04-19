@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HumanCharacteristicsNotifier extends ChangeNotifier {
-  late int _userHeight;
+  int _userHeight = 170;
+  int _stepGoal = 10000;
   late SharedPreferences _preferences;
   bool isInitialized = false;
 
@@ -15,8 +16,19 @@ class HumanCharacteristicsNotifier extends ChangeNotifier {
   void _init() async {
     _preferences = await SharedPreferences.getInstance();
     _userHeight = _preferences.getInt('userHeight') ?? 170;
+    _stepGoal = _preferences.getInt('stepGoal') ?? 10000;
     isInitialized = true;
     notifyListeners();
+  }
+
+  void setStepGoal(int goal) {
+    _stepGoal = goal;
+    _preferences.setInt('stepGoal', goal);
+    notifyListeners();
+  }
+
+  int getStepGoal() {
+    return _stepGoal;
   }
 
   void setUserHeight(int height) {

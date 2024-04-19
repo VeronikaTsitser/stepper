@@ -14,28 +14,15 @@ Future<int> showHeightDialog(BuildContext context) {
   });
 }
 
-class HeighDialogWidget extends StatefulWidget {
+class HeighDialogWidget extends StatelessWidget {
   const HeighDialogWidget({super.key});
 
   @override
-  State<HeighDialogWidget> createState() => _HeighDialogWidgetState();
-}
-
-class _HeighDialogWidgetState extends State<HeighDialogWidget> {
-  final TextEditingController controller = TextEditingController();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    int personHeigh = 170;
+    int userHeigh = 170;
     List<int> generateNumberList(int start, int end) => List<int>.generate(end - start + 1, (index) => start + index);
     final valuesList = generateNumberList(81, 230);
-    final initialIndex = valuesList.indexOf(personHeigh);
+    final initialIndex = valuesList.indexOf(userHeigh);
 
     return AlertDialog(
       content: Column(
@@ -49,13 +36,60 @@ class _HeighDialogWidgetState extends State<HeighDialogWidget> {
             child: CupertinoPicker(
               itemExtent: 32,
               useMagnifier: true,
-              onSelectedItemChanged: (int index) => personHeigh = valuesList[index],
+              onSelectedItemChanged: (int index) => userHeigh = valuesList[index],
               scrollController: FixedExtentScrollController(initialItem: initialIndex),
               children: valuesList.map((e) => Center(child: Text('$e'))).toList(),
             ),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(personHeigh),
+            onPressed: () => Navigator.of(context).pop(userHeigh),
+            child: const Text('Сохранить'),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+Future<int> showStepGoalDialog(BuildContext context) {
+  return showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) => const StepGoalDialogWidget(),
+  ).then((value) {
+    log('Step goal: $value');
+    return value;
+  });
+}
+
+class StepGoalDialogWidget extends StatelessWidget {
+  const StepGoalDialogWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    int stepGoal = 10000;
+    List<int> generateNumberList(int start, int end, int step) =>
+        List<int>.generate(((end - start) / step).ceil() + 1, (index) => start + index * step);
+    final valuesList = generateNumberList(1000, 20000, 1000);
+    final initialIndex = valuesList.indexOf(stepGoal);
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('Укажите вашу цель', style: TextStyle(fontSize: 20)),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 200,
+            child: CupertinoPicker(
+              itemExtent: 32,
+              useMagnifier: true,
+              onSelectedItemChanged: (int index) => stepGoal = valuesList[index],
+              scrollController: FixedExtentScrollController(initialItem: initialIndex),
+              children: valuesList.map((e) => Center(child: Text('$e'))).toList(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(stepGoal),
             child: const Text('Сохранить'),
           )
         ],

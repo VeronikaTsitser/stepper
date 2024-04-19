@@ -21,13 +21,9 @@ class _DistanceWidgetState extends State<DistanceWidget> {
   }
 
   String calculateDistance(int steps) {
-    if (context.watch<HumanCharacteristicsNotifier>().isInitialized) {
-      final stepLength = context.watch<HumanCharacteristicsNotifier>().calculateStepLength();
-
-      final distance = (steps * stepLength) / 1000;
-      log('Distance: $distance');
-      return distance.toStringAsFixed(2);
-    }
-    return '';
+    final stepLength = context.watch<HumanCharacteristicsNotifier>().calculateStepLength();
+    final distance = (steps * stepLength) / 1000;
+    log('Distance: $distance');
+    return distance.toStringAsFixed(2);
   }
 }
