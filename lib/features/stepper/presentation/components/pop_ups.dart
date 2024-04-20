@@ -97,3 +97,18 @@ class StepGoalDialogWidget extends StatelessWidget {
     );
   }
 }
+
+Future<void> showPermissionSettingsDialog(BuildContext context) => showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Необходимо разрешение'),
+        content: const Text('Для работы приложения необходимо разрешение на использование педометра'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Перейти в настройки'),
+          ),
+        ],
+      ),
+    );

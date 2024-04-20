@@ -16,7 +16,7 @@ class _WalkingTimerState extends State<WalkingTimer> {
 
   StepperState get stepperState => context.read<StepperBloc>().state;
   int get _walkingTime => stepperState.walkingTime;
-  bool get _isPaused => stepperState.allSteps.isNotEmpty ? stepperState.allSteps.last.isPaused : false;
+  bool get _isPaused => stepperState.allSteps.isNotEmpty ? stepperState.allSteps.last.isPaused : true;
   int _newWalkingTime = 0;
 
   void startTimer() {
@@ -25,7 +25,7 @@ class _WalkingTimerState extends State<WalkingTimer> {
   }
 
   void onTick(Timer timer) {
-    if (!_isPaused) {
+    if (!_isPaused && stepperState.allSteps.isNotEmpty) {
       setState(() {
         DateTime currentTime = DateTime.now();
         DateTime lastStepDate = stepperState.allSteps.last.date;

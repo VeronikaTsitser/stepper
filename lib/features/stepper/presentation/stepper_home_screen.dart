@@ -31,27 +31,7 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton(
-            onPressed: () => showHeightDialog(context)
-                .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
-            child: const Icon(Icons.settings),
-          ),
-          const SizedBox(width: 20),
-          FloatingActionButton(
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              prefs.clear();
-            },
-            child: const Icon(Icons.clear),
-          ),
-        ],
-      ),
-      appBar: AppBar(
-        title: const Text('My Stepper'),
-      ),
+      floatingActionButton: const SettingsButton(),
       body: Center(
         child: BlocBuilder<StepperBloc, StepperState>(
           builder: (context, state) {
@@ -73,7 +53,22 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                       const SizedBox(height: 20),
                       StepsProgressIndicator(steps: steps),
                       const SizedBox(height: 20),
-                      StartPauseButton(snapshot: snapshot),
+                      StartPauseButton(
+                        onValueChanged: (value) {
+                          if (value) {
+                            if (state.allSteps.isEmpty) {
+                              startListeningSteps();
+                            }
+                            if (isInitialized) {
+                              context
+                                  .read<StepperBloc>()
+                                  .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
+                            }
+                          } else if (!value) {
+                            showPermissionSettingsDialog(context).then((value) => openAppSettings());
+                          }
+                        },
+                      ),
                       const SizedBox(height: 20),
                       DistanceWidget(steps: steps),
                       const SizedBox(height: 20),
@@ -122,22 +117,6 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    requestPermissions();
-  }
-
-  Future<void> requestPermissions() async {
-    final status = await Permission.activityRecognition.request();
-    if (status == PermissionStatus.granted) {
-      log("Permission granted");
-      startListeningSteps();
-    } else {
-      log("Permission denied");
-    }
-  }
-
   void startListeningSteps() {
     _subscription ??= Pedometer.stepCountStream.listen(
       onStepCount,
@@ -154,5 +133,33 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
   void dispose() {
     _subscription?.cancel();
     super.dispose();
+  }
+}
+
+class SettingsButton extends StatelessWidget {
+  const SettingsButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FloatingActionButton(
+          onPressed: () => showHeightDialog(context)
+              .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
+          child: const Icon(Icons.settings),
+        ),
+        const SizedBox(width: 20),
+        FloatingActionButton(
+          onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            prefs.clear();
+          },
+          child: const Icon(Icons.clear),
+        ),
+      ],
+    );
   }
 }
