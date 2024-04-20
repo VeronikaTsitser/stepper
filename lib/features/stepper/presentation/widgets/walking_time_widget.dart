@@ -25,13 +25,21 @@ class _WalkingTimeWidgetState extends State<WalkingTimeWidget> {
   }
 
   void onTick(Timer timer) {
-    if (!_isPaused && stepperState.allSteps.isNotEmpty) {
-      setState(() {
-        DateTime currentTime = DateTime.now();
-        DateTime lastStepDate = stepperState.allSteps.last.date;
-        int secFromLastStepToNow = currentTime.difference(lastStepDate).inSeconds;
-        _newWalkingTime = _walkingTime + secFromLastStepToNow;
-      });
+    if (stepperState.allSteps.isNotEmpty) {
+      if (_isPaused) {
+        if (_newWalkingTime != _walkingTime) {
+          setState(() {
+            _newWalkingTime = _walkingTime;
+          });
+        }
+      } else {
+        setState(() {
+          DateTime currentTime = DateTime.now();
+          DateTime lastStepDate = stepperState.allSteps.last.date;
+          int secFromLastStepToNow = currentTime.difference(lastStepDate).inSeconds;
+          _newWalkingTime = _walkingTime + secFromLastStepToNow;
+        });
+      }
     }
   }
 
