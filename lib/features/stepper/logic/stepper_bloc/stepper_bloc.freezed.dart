@@ -17,21 +17,19 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$StepperEvent {
   int get steps => throw _privateConstructorUsedError;
-  Completer<dynamic>? get completer => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int steps, Completer<dynamic>? completer)
-        toggleTracking,
+    required TResult Function(int steps) toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int steps, Completer<dynamic>? completer)? toggleTracking,
+    TResult? Function(int steps)? toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int steps, Completer<dynamic>? completer)? toggleTracking,
+    TResult Function(int steps)? toggleTracking,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -63,7 +61,7 @@ abstract class $StepperEventCopyWith<$Res> {
           StepperEvent value, $Res Function(StepperEvent) then) =
       _$StepperEventCopyWithImpl<$Res, StepperEvent>;
   @useResult
-  $Res call({int steps, Completer<dynamic>? completer});
+  $Res call({int steps});
 }
 
 /// @nodoc
@@ -80,17 +78,12 @@ class _$StepperEventCopyWithImpl<$Res, $Val extends StepperEvent>
   @override
   $Res call({
     Object? steps = null,
-    Object? completer = freezed,
   }) {
     return _then(_value.copyWith(
       steps: null == steps
           ? _value.steps
           : steps // ignore: cast_nullable_to_non_nullable
               as int,
-      completer: freezed == completer
-          ? _value.completer
-          : completer // ignore: cast_nullable_to_non_nullable
-              as Completer<dynamic>?,
     ) as $Val);
   }
 }
@@ -103,7 +96,7 @@ abstract class _$$PauseResumeTrackingImplCopyWith<$Res>
       __$$PauseResumeTrackingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int steps, Completer<dynamic>? completer});
+  $Res call({int steps});
 }
 
 /// @nodoc
@@ -118,17 +111,12 @@ class __$$PauseResumeTrackingImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? steps = null,
-    Object? completer = freezed,
   }) {
     return _then(_$PauseResumeTrackingImpl(
       steps: null == steps
           ? _value.steps
           : steps // ignore: cast_nullable_to_non_nullable
               as int,
-      completer: freezed == completer
-          ? _value.completer
-          : completer // ignore: cast_nullable_to_non_nullable
-              as Completer<dynamic>?,
     ));
   }
 }
@@ -136,16 +124,14 @@ class __$$PauseResumeTrackingImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$PauseResumeTrackingImpl implements PauseResumeTracking {
-  const _$PauseResumeTrackingImpl({required this.steps, this.completer});
+  const _$PauseResumeTrackingImpl({required this.steps});
 
   @override
   final int steps;
-  @override
-  final Completer<dynamic>? completer;
 
   @override
   String toString() {
-    return 'StepperEvent.toggleTracking(steps: $steps, completer: $completer)';
+    return 'StepperEvent.toggleTracking(steps: $steps)';
   }
 
   @override
@@ -153,13 +139,11 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PauseResumeTrackingImpl &&
-            (identical(other.steps, steps) || other.steps == steps) &&
-            (identical(other.completer, completer) ||
-                other.completer == completer));
+            (identical(other.steps, steps) || other.steps == steps));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, steps, completer);
+  int get hashCode => Object.hash(runtimeType, steps);
 
   @JsonKey(ignore: true)
   @override
@@ -171,28 +155,27 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int steps, Completer<dynamic>? completer)
-        toggleTracking,
+    required TResult Function(int steps) toggleTracking,
   }) {
-    return toggleTracking(steps, completer);
+    return toggleTracking(steps);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int steps, Completer<dynamic>? completer)? toggleTracking,
+    TResult? Function(int steps)? toggleTracking,
   }) {
-    return toggleTracking?.call(steps, completer);
+    return toggleTracking?.call(steps);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int steps, Completer<dynamic>? completer)? toggleTracking,
+    TResult Function(int steps)? toggleTracking,
     required TResult orElse(),
   }) {
     if (toggleTracking != null) {
-      return toggleTracking(steps, completer);
+      return toggleTracking(steps);
     }
     return orElse();
   }
@@ -227,14 +210,11 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
 }
 
 abstract class PauseResumeTracking implements StepperEvent {
-  const factory PauseResumeTracking(
-      {required final int steps,
-      final Completer<dynamic>? completer}) = _$PauseResumeTrackingImpl;
+  const factory PauseResumeTracking({required final int steps}) =
+      _$PauseResumeTrackingImpl;
 
   @override
   int get steps;
-  @override
-  Completer<dynamic>? get completer;
   @override
   @JsonKey(ignore: true)
   _$$PauseResumeTrackingImplCopyWith<_$PauseResumeTrackingImpl> get copyWith =>

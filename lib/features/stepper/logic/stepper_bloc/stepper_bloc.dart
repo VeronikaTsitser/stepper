@@ -28,6 +28,5 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
       }
     }
     emit(StepperState(allSteps: newAllSteps, walkingTime: walkingTime));
-    event.completer?.complete();
   }
 }

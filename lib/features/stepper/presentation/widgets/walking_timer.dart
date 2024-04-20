@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
+import 'package:stepper/features/stepper/logic/stepper_bloc/stepper_bloc.dart';
 
 class WalkingTimer extends StatefulWidget {
   const WalkingTimer({super.key});
