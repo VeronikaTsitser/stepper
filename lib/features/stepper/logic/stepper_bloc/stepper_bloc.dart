@@ -17,8 +17,12 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
 
   Future<void> onToggleTrackingEvent(PauseResumeTracking event, Emitter<StepperState> emit) async {
     final allSteps = await repository.getAllSteps();
+    DateTime startOfToday = DateTime.now().startOfDay;
+    final currentDaySteps = allSteps.where((element) => element.date.isAfter(startOfToday)).toList();
     final newStep = StepModel(
-        step: event.steps, date: DateTime.now(), isPaused: allSteps.isNotEmpty ? !allSteps.last.isPaused : false);
+        step: event.steps,
+        date: DateTime.now(),
+        isPaused: currentDaySteps.isNotEmpty ? !currentDaySteps.last.isPaused : false);
     final newAllSteps = [...allSteps, newStep];
     await repository.setAllSteps(newAllSteps);
     int walkingTime = 0;
@@ -27,6 +31,13 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
         walkingTime += newAllSteps[i + 1].date.difference(newAllSteps[i].date).inSeconds;
       }
     }
-    emit(StepperState(allSteps: newAllSteps, walkingTime: walkingTime));
+    emit(StepperState(allSteps: [...currentDaySteps, newStep], walkingTime: walkingTime));
+  }
+}
+
+extension DateTimeExtensions on DateTime {
+  /// Возвращает DateTime на начало текущего дня (00:00:00)
+  DateTime get startOfDay {
+    return DateTime(year, month, day);
   }
 }
