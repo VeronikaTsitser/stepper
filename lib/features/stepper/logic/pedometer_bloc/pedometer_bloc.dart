@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:stepper/features/core/services/permission_service.dart';
 
 part 'pedometer_bloc.freezed.dart';
 part 'pedometer_event.dart';
@@ -15,13 +16,16 @@ class PedometerBloc extends Bloc<PedometerEvent, PedometerState> {
     on<PedometerChanged>(onPedometerChanged);
   }
 
-  void onPedometerStarted(PedometerStarted event, Emitter<PedometerState> emit) {
+  Future<void> onPedometerStarted(PedometerStarted event, Emitter<PedometerState> emit) async {
     if (state.isInitialized) {
       return;
     }
-    _subscription ??= Pedometer.stepCountStream.listen(
-      (value) => add(PedometerChanged(value.steps)),
-    );
+
+    if (await checkActivityPermissions()) {
+      _subscription ??= Pedometer.stepCountStream.listen(
+        (value) => add(PedometerChanged(value.steps)),
+      );
+    }
   }
 
   void onPedometerChanged(PedometerChanged event, Emitter<PedometerState> emit) {

@@ -28,7 +28,7 @@ class StepperApp extends StatelessWidget {
             BlocProvider(
               create: (context) => StepperBloc(context.read<StepperRepositoryImpl>())..add(const StepperStarted()),
             ),
-            BlocProvider(create: (context) => PedometerBloc()),
+            BlocProvider(create: (context) => PedometerBloc()..add(const PedometerStarted())),
           ],
           child: ChangeNotifierProvider(
             create: (context) => HumanCharacteristicsNotifier(),
