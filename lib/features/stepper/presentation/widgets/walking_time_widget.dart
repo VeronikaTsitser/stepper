@@ -20,26 +20,19 @@ class _WalkingTimeWidgetState extends State<WalkingTimeWidget> {
   int _newWalkingTime = 0;
 
   void startTimer() {
+    _newWalkingTime = _walkingTime;
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(oneSec, onTick);
   }
 
   void onTick(Timer timer) {
-    if (stepperState.allSteps.isNotEmpty) {
-      if (_isPaused) {
-        if (_newWalkingTime != _walkingTime) {
-          setState(() {
-            _newWalkingTime = _walkingTime;
-          });
-        }
-      } else {
-        setState(() {
-          DateTime currentTime = DateTime.now();
-          DateTime lastStepDate = stepperState.allSteps.last.date;
-          int secFromLastStepToNow = currentTime.difference(lastStepDate).inSeconds;
-          _newWalkingTime = _walkingTime + secFromLastStepToNow;
-        });
-      }
+    if (!_isPaused && stepperState.allSteps.isNotEmpty) {
+      setState(() {
+        DateTime currentTime = DateTime.now();
+        DateTime lastStepDate = stepperState.allSteps.last.date;
+        int secFromLastStepToNow = currentTime.difference(lastStepDate).inSeconds;
+        _newWalkingTime = _walkingTime + secFromLastStepToNow;
+      });
     }
   }
 
@@ -56,6 +49,7 @@ class _WalkingTimeWidgetState extends State<WalkingTimeWidget> {
   @override
   void initState() {
     startTimer();
+
     super.initState();
   }
 
