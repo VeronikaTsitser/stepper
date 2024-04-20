@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stepper/features/stepper/logic/stepper_bloc/stepper_bloc.dart';
 
-class WalkingTimer extends StatefulWidget {
-  const WalkingTimer({super.key});
+class WalkingTimeWidget extends StatefulWidget {
+  const WalkingTimeWidget({super.key});
 
   @override
-  State<WalkingTimer> createState() => _WalkingTimerState();
+  State<WalkingTimeWidget> createState() => _WalkingTimeWidgetState();
 }
 
-class _WalkingTimerState extends State<WalkingTimer> {
+class _WalkingTimeWidgetState extends State<WalkingTimeWidget> {
   Timer? _timer;
 
   StepperState get stepperState => context.read<StepperBloc>().state;

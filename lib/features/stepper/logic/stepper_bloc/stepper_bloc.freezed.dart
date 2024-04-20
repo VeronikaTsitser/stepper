@@ -16,42 +16,43 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$StepperEvent {
-  int get steps => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() started,
     required TResult Function(int steps) toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
     TResult? Function(int steps)? toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
     TResult Function(int steps)? toggleTracking,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(StepperStarted value) started,
     required TResult Function(PauseResumeTracking value) toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StepperStarted value)? started,
     TResult? Function(PauseResumeTracking value)? toggleTracking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(StepperStarted value)? started,
     TResult Function(PauseResumeTracking value)? toggleTracking,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $StepperEventCopyWith<StepperEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -60,8 +61,6 @@ abstract class $StepperEventCopyWith<$Res> {
   factory $StepperEventCopyWith(
           StepperEvent value, $Res Function(StepperEvent) then) =
       _$StepperEventCopyWithImpl<$Res, StepperEvent>;
-  @useResult
-  $Res call({int steps});
 }
 
 /// @nodoc
@@ -73,28 +72,115 @@ class _$StepperEventCopyWithImpl<$Res, $Val extends StepperEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? steps = null,
-  }) {
-    return _then(_value.copyWith(
-      steps: null == steps
-          ? _value.steps
-          : steps // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$PauseResumeTrackingImplCopyWith<$Res>
-    implements $StepperEventCopyWith<$Res> {
+abstract class _$$StepperStartedImplCopyWith<$Res> {
+  factory _$$StepperStartedImplCopyWith(_$StepperStartedImpl value,
+          $Res Function(_$StepperStartedImpl) then) =
+      __$$StepperStartedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$StepperStartedImplCopyWithImpl<$Res>
+    extends _$StepperEventCopyWithImpl<$Res, _$StepperStartedImpl>
+    implements _$$StepperStartedImplCopyWith<$Res> {
+  __$$StepperStartedImplCopyWithImpl(
+      _$StepperStartedImpl _value, $Res Function(_$StepperStartedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$StepperStartedImpl implements StepperStarted {
+  const _$StepperStartedImpl();
+
+  @override
+  String toString() {
+    return 'StepperEvent.started()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$StepperStartedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(int steps) toggleTracking,
+  }) {
+    return started();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(int steps)? toggleTracking,
+  }) {
+    return started?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(int steps)? toggleTracking,
+    required TResult orElse(),
+  }) {
+    if (started != null) {
+      return started();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StepperStarted value) started,
+    required TResult Function(PauseResumeTracking value) toggleTracking,
+  }) {
+    return started(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StepperStarted value)? started,
+    TResult? Function(PauseResumeTracking value)? toggleTracking,
+  }) {
+    return started?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StepperStarted value)? started,
+    TResult Function(PauseResumeTracking value)? toggleTracking,
+    required TResult orElse(),
+  }) {
+    if (started != null) {
+      return started(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class StepperStarted implements StepperEvent {
+  const factory StepperStarted() = _$StepperStartedImpl;
+}
+
+/// @nodoc
+abstract class _$$PauseResumeTrackingImplCopyWith<$Res> {
   factory _$$PauseResumeTrackingImplCopyWith(_$PauseResumeTrackingImpl value,
           $Res Function(_$PauseResumeTrackingImpl) then) =
       __$$PauseResumeTrackingImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({int steps});
 }
@@ -155,6 +241,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() started,
     required TResult Function(int steps) toggleTracking,
   }) {
     return toggleTracking(steps);
@@ -163,6 +250,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
     TResult? Function(int steps)? toggleTracking,
   }) {
     return toggleTracking?.call(steps);
@@ -171,6 +259,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
     TResult Function(int steps)? toggleTracking,
     required TResult orElse(),
   }) {
@@ -183,6 +272,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(StepperStarted value) started,
     required TResult Function(PauseResumeTracking value) toggleTracking,
   }) {
     return toggleTracking(this);
@@ -191,6 +281,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StepperStarted value)? started,
     TResult? Function(PauseResumeTracking value)? toggleTracking,
   }) {
     return toggleTracking?.call(this);
@@ -199,6 +290,7 @@ class _$PauseResumeTrackingImpl implements PauseResumeTracking {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(StepperStarted value)? started,
     TResult Function(PauseResumeTracking value)? toggleTracking,
     required TResult orElse(),
   }) {
@@ -213,9 +305,7 @@ abstract class PauseResumeTracking implements StepperEvent {
   const factory PauseResumeTracking({required final int steps}) =
       _$PauseResumeTrackingImpl;
 
-  @override
   int get steps;
-  @override
   @JsonKey(ignore: true)
   _$$PauseResumeTrackingImplCopyWith<_$PauseResumeTrackingImpl> get copyWith =>
       throw _privateConstructorUsedError;
