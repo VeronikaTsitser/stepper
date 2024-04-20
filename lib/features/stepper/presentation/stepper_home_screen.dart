@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedometer/pedometer.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepper/features/stepper/domain/models/step_model.dart';
 import 'package:stepper/features/stepper/logic/bloc/stepper_bloc.dart';
@@ -54,18 +53,15 @@ class _StepperHomeScreenState extends State<StepperHomeScreen> {
                       StepsProgressIndicator(steps: steps),
                       const SizedBox(height: 20),
                       StartPauseButton(
-                        onValueChanged: (value) {
-                          if (value) {
-                            if (state.allSteps.isEmpty) {
-                              startListeningSteps();
-                            }
-                            if (isInitialized) {
-                              context
-                                  .read<StepperBloc>()
-                                  .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
-                            }
-                          } else if (!value) {
-                            showPermissionSettingsDialog(context).then((value) => openAppSettings());
+                        isPaused: state.allSteps.isNotEmpty && state.allSteps.last.isPaused || state.allSteps.isEmpty,
+                        onPermissionGranted: () {
+                          if (state.allSteps.isEmpty) {
+                            startListeningSteps();
+                          }
+                          if (isInitialized) {
+                            context
+                                .read<StepperBloc>()
+                                .add(StepperEvent.toggleTracking(steps: snapshot.data?.steps ?? 0));
                           }
                         },
                       ),
