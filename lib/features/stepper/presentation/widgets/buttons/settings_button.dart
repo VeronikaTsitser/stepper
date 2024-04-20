@@ -11,8 +11,11 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () =>
-          showHeightDialog(context).then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value)),
+      onPressed: () {
+        final userHeight = context.read<HumanCharacteristicsNotifier>().getUserHeight();
+        showHeightDialog(context, userHeight)
+            .then((value) => context.read<HumanCharacteristicsNotifier>().setUserHeight(value));
+      },
       child: const Icon(Icons.settings),
     );
   }

@@ -14,7 +14,7 @@ class StepGoalWidget extends StatelessWidget {
       children: [
         Text('Цель: $stepGoal шагов', style: const TextStyle(fontSize: 20)),
         IconButton(
-            onPressed: () => showStepGoalDialog(context)
+            onPressed: () => showStepGoalDialog(context, stepGoal)
                 .then((value) => context.read<HumanCharacteristicsNotifier>().setStepGoal(value)),
             icon: const Icon(Icons.edit)),
       ],
