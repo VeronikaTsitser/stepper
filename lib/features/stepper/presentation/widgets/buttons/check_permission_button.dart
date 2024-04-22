@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:stepper/features/core/services/permission_service.dart';
+import 'package:stepper/core/services/permission_service.dart';
 import 'package:stepper/features/stepper/presentation/components/pop_ups.dart';
 
 class CheckPermissionButton extends StatelessWidget {
